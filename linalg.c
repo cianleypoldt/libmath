@@ -120,37 +120,37 @@ void mul3x3(f64* Res, const f64* LHS, const f64* RHS) {
 void rotate3x3X(f64* Res, const f64* M, f64 angle) {
         f64 s = sin(angle);
         f64 c = cos(angle);
-        f64 m4_rotation[16];
-        assign_identityNxN(m4_rotation, 4);
-        m4_rotation[MAT3IDX(1, 1)] = c;
-        m4_rotation[MAT3IDX(1, 2)] = -s;
-        m4_rotation[MAT3IDX(2, 1)] = s;
-        m4_rotation[MAT3IDX(2, 2)] = c;
-        mul4x4(Res, m4_rotation, M);
+        f64 m3_rot[9];
+        assign_identityNxN(m3_rot, 3);
+        m3_rot[MAT3IDX(1, 1)] = c;
+        m3_rot[MAT3IDX(1, 2)] = -s;
+        m3_rot[MAT3IDX(2, 1)] = s;
+        m3_rot[MAT3IDX(2, 2)] = c;
+        mul3x3(Res, m3_rot, M);
 }
 
 void rotate3x3Y(f64* Res, const f64* M, f64 angle) {
         f64 s = sin(angle);
         f64 c = cos(angle);
-        f64 m4_rotation[16];
-        assign_identityNxN(m4_rotation, 4);
-        m4_rotation[MAT4IDX(0, 0)] = c;
-        m4_rotation[MAT4IDX(0, 2)] = s;
-        m4_rotation[MAT4IDX(2, 0)] = -s;
-        m4_rotation[MAT4IDX(2, 2)] = c;
-        mul4x4(Res, m4_rotation, M);
+        f64 m3_rot[9];
+        assign_identityNxN(m3_rot, 3);
+        m3_rot[MAT3IDX(0, 0)] = c;
+        m3_rot[MAT3IDX(0, 2)] = s;
+        m3_rot[MAT3IDX(2, 0)] = -s;
+        m3_rot[MAT3IDX(2, 2)] = c;
+        mul3x3(Res, m3_rot, M);
 }
 
 void rotate3x3Z(f64* Res, const f64* M, f64 angle) {
         f64 s = sin(angle);
         f64 c = cos(angle);
-        f64 m4_rotation[16];
-        assign_identityNxN(m4_rotation, 4);
-        m4_rotation[MAT4IDX(0, 0)] = c;
-        m4_rotation[MAT4IDX(0, 1)] = -s;
-        m4_rotation[MAT4IDX(1, 0)] = s;
-        m4_rotation[MAT4IDX(1, 1)] = c;
-        mul4x4(Res, m4_rotation, M);
+        f64 m3_rot[9];
+        assign_identityNxN(m3_rot, 3);
+        m3_rot[MAT3IDX(0, 0)] = c;
+        m3_rot[MAT3IDX(0, 1)] = -s;
+        m3_rot[MAT3IDX(1, 0)] = s;
+        m3_rot[MAT3IDX(1, 1)] = c;
+        mul3x3(Res, m3_rot, M);
 }
 
 void rotate3x3_axis(f64* Res, const f64* M, const f64* axis, f64 angle) {
@@ -185,18 +185,18 @@ void rotate3x3_axis(f64* Res, const f64* M, const f64* axis, f64 angle) {
 }
 
 void demote4x4to3x3(f64* Res, const f64* M) {
-        for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                        Res[MAT3IDX(i, j)] = M[MAT4IDX(i, j)];
+        for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                        Res[MAT3IDX(row, col)] = M[MAT4IDX(row, col)];
                 }
         }
 }
 
 void promote3x3to4x4(f64* Res, const f64* M) {
         clearN(Res, 16);
-        for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                        Res[MAT4IDX(i, j)] = M[MAT3IDX(i, j)];
+        for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                        Res[MAT4IDX(row, col)] = M[MAT3IDX(row, col)];
                 }
         }
         Res[MAT4IDX(3, 3)] = 1.0;
@@ -241,7 +241,7 @@ void transposeNxN(f64* Res, const f64* M, u32 N) {
 void assign_identityNxN(f64* M, u32 N) {
         clearN(M, N * N);
         for (int i = 0; i < N; i++) {
-                M[MAT4IDX(i, i)] = 1;
+                M[MATNIDX(i, i, N, N)] = 1;
         }
 }
 
