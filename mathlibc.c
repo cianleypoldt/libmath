@@ -54,6 +54,14 @@ void cross3(f64* res, const f64* left, const f64* right) {
         assignN(res, tmp, 3);
 }
 
+void outer_product3(f64* Res4x4, const f64* left, const f64* right) {
+        for (int col = 0; col < 3; col++) {
+                for (int row = 0; row < 3; row++) {
+                        Res4x4[MAT4IDX(col, row)] = left[row] * right[col];
+                }
+        }
+}
+
 void mul4x4vec4(f64* res, const f64* LHS, const f64* v) {
         for (int i = 0; i < 4; i++) {
                 res[i] = v[0] * LHS[MAT4IDX(i, 0)] + v[1] * LHS[MAT4IDX(i, 1)] +
@@ -79,6 +87,12 @@ void scale4x4_diag(f64* Res, const f64* M, const f64 s) {
         Res[MAT4IDX(0, 0)] = M[MAT4IDX(0, 0)] * s;
         Res[MAT4IDX(1, 1)] = M[MAT4IDX(1, 1)] * s;
         Res[MAT4IDX(2, 2)] = M[MAT4IDX(2, 2)] * s;
+}
+
+void add4x4(f64* Res, const f64* A, const f64* B) {
+        for (int i = 0; i < 16; i++) {
+                Res[i] = A[i] + B[i];
+        }
 }
 
 void mul4x4(f64* Res, const f64* LHS, const f64* RHS) {
@@ -134,12 +148,32 @@ void rotate4x4Z(f64* Res, const f64* M, f64 angle) {
 void rotate4x4_axis(f64* Res, const f64* M, const f64* axis, f64 angle) {
         // v_new = v * cos(angle) + (axis x v) sin(angle) + axis(axis dot v)(1 - cos(angle))
         // to matrix form:
-        // aaM = Identity * cos(angle) + (v3_to_cross_product3x3(axis)) * sin(angle) + axis*transpose(axis)(1 - cos(angle))
+        // aaM = Identity * cos(angle) + (v3_to_cross_product4x4(axis)) * sin(angle) + axis*transpose(axis)(1 - cos(angle))
+
+        f64 u[3];
+        norm3(u, axis);
+
         f64 s = sin(angle);
         f64 c = cos(angle);
+
+        f64 identity[16];
+        assign_identityNxN(identity, 4);
+        mul4x4scalar(identity, identity, c);
+
+        f64 cross[16];
+        v3to_cross_product4x4(cross, u);
+        mul4x4scalar(cross, cross, s);
+
+        f64 dot[16];
+        assign_identityNxN(dot, 4);
+        outer_product3(dot, u, u);
+        mul4x4scalar(dot, dot, (1 - c));
+
         f64 aaM[16];
-        assign_identityNxN(aaM, 4);
-        mul4x4scalar(aaM, aaM, c);
+        add4x4(aaM, identity, cross);
+        add4x4(aaM, aaM, dot);
+
+        mul4x4(Res, M, aaM);
 }
 
 void transposeNxN(f64* Res, const f64* M, u32 N) {
@@ -158,7 +192,7 @@ void assign_identityNxN(f64* M, u32 N) {
 }
 
 // create the scew symmetric matrix Res equivalent of a cross product with v
-void v3to_cross_product3x3(f64* Res, const f64* v) {
+void v3to_cross_product4x4(f64* Res, const f64* v) {
         memset(Res, 0, 9 * sizeof(f64));
         Res[MAT4IDX(0, 1)] = -v[2];  // Res_{1,2} = -v_z
         Res[MAT4IDX(0, 2)] = v[1];   // Res_{1,3} = v_y
