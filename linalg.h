@@ -1,10 +1,7 @@
-#ifndef C_UTILS
-#define C_UTILS
+#ifndef LIN_ALG_H
+#define LIN_ALG_H
 
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 // MATH
 
@@ -64,15 +61,5 @@ void printN(const f64* v, u32 N);
 void printNxN(const f64* M, u32 rowN, u32 colN);
 void printN_named(const f64* v, u32 N, const char* name);
 void printNxN_named(const f64* M, u32 rowN, u32 colN, const char* name);
-
-// FILE IO
-
-typedef struct {
-        void* buffer;
-        u64   size;
-} file;
-
-file load_file(const char* path);
-void free_file(file);
 
 #endif

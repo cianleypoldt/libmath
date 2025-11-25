@@ -1,10 +1,8 @@
-#include "utils.h"
+#include "linalg.h"
 
-#include <assert.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 // MATH
@@ -231,35 +229,4 @@ void printN_named(const f64* v, u32 N, const char* name) {
 void printNxN_named(const f64* M, u32 rowN, u32 colN, const char* name) {
         printf("mat%ix%i \"%s\":\n", rowN, colN, name);
         printNxN(M, rowN, colN);
-}
-
-// FILE IO
-
-file load_file(const char* path) {
-        FILE* fp = fopen(path, "rb");
-        if (!fp) {
-                return (file) { NULL, 0 };
-        }
-
-        fseek(fp, 0, SEEK_END);
-        long size = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
-        if (size < 0) {
-                fclose(fp);
-                return (file) { NULL, 0 };
-        }
-        void* buffer = malloc(size);
-        if (!buffer) {
-                fclose(fp);
-                return (file) { NULL, 0 };
-        }
-
-        fread(buffer, 1, size, fp);
-        fclose(fp);
-
-        return (file) { buffer, size };
-}
-
-void free_file(file f) {
-        free(f.buffer);
 }
