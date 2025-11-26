@@ -4,12 +4,11 @@ A small C library providing raw vector and matrix operations for simulation and 
 
 ### Builds and link
 
-''' bash
+```bash
 set -e
 
 ( cd libmath && ./build.sh )
 
 gcc -o proj main.c libmath/libmath.a -lm
-'''
-
-### Syntax
+```
+## Syntax
