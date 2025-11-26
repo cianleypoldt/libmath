@@ -2,12 +2,10 @@
 
 A minimal C math library intended for personal use in simulation/graphics code.
 
-- Column-major layout by default. Define `ROW_MAJOR` before including the header to use row-major.
-- No dynamic allocations anywhere in the library.
-- All operations work on raw `f64*` buffers. No custom structs or composite types are provided or enforced.
-
-- Most functions follow the pattern: `fn(target, sourceA, sourceB, ...)`.
-
+- Column-major layout by default. Define `ROW_MAJOR` before including the header to use row-major
+- No dynamic allocations anywhere in the library
+- All operations work on raw `f64*` buffers. No custom structs or composite types are provided or enforced
+- Most functions follow the pattern: `fn(target, sourceA, sourceB, ...)`.  
   `target` may alias one of the sources for in-place updates.
   
 ## Examples
