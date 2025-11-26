@@ -21,10 +21,6 @@ typedef uint64_t u64;
 #define MAT4IDX(row, col) MATNIDX((row), (col), 4, 4)
 #define MAT3IDX(row, col) MATNIDX((row), (col), 3, 3)
 
-void zeroN(f64* res, u32 N);
-void assignN(f64* res, const f64* v, u32 N);
-void fillN(f64* res, f64 val, u32 N);
-
 f64  vec3_len(const f64* v);
 f64  vec3_dot(const f64* a, const f64* b);
 void vec3_add(f64* res, const f64* a, const f64* b);
@@ -54,6 +50,10 @@ void mat4_translate(f64* Res, const f64* M, const f64* v);
 
 void matN_assign_identity(f64* M, u32 N);
 void matN_transpose(f64* Res, const f64* M, u32 N);
+
+void zeroN(f64* res, u32 N);
+void assignN(f64* res, const f64* v, u32 N);
+void fillN(f64* res, f64 val, u32 N);
 
 // debug
 void vecN_print(const f64* v, u32 N);
