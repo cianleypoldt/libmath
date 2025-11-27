@@ -1,6 +1,6 @@
 # libmath
 
-A minimal C math library intended for personal use in simulation/graphics code.
+A small C math library intended for use in simulation/graphics code.
 
 - Column-major layout by default. Define `ROW_MAJOR` before including the header to use row-major
 - No dynamic allocations anywhere in the library
