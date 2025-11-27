@@ -6,8 +6,7 @@ A small C math library intended for use in simulation/graphics code.
 - No dynamic allocations anywhere in the library
 - All operations work on raw `f64*` buffers. No custom structs or composite types are provided or enforced
 - Most functions follow the pattern: `fn(target, sourceA, sourceB, ...)`.  
-  `target` may alias one of the sources for in-place updates.
-  
+
 ## Examples
 
 ```c
