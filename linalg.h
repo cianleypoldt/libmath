@@ -3,6 +3,12 @@
 
 #include <stdint.h>
 
+#ifdef LIBMATH_USE_SINGLE_PRECISION
+typedef float real_t;
+#else
+typedef double real_t;
+#endif
+
 typedef float    f32;
 typedef double   f64;
 typedef int32_t  i32;
@@ -22,44 +28,47 @@ typedef uint64_t u64;
 #define MAT4IDX(row, col) MATNIDX((row), (col), 4, 4)
 #define MAT3IDX(row, col) MATNIDX((row), (col), 3, 3)
 
-f64  vec3_len(const f64* v);
-f64  vec3_dot(const f64* a, const f64* b);
-void vec3_add(f64* res, const f64* a, const f64* b);
-void vec3_scale(f64* res, const f64* v, f64 factor);
-void vec3_norm(f64* res, const f64* v);
-void vec3_cross(f64* res, const f64* left, const f64* right);
+real_t vec3_len(const real_t* v);
+real_t vec3_dot(const real_t* a, const real_t* b);
+void   vec3_add(real_t* res, const real_t* a, const real_t* b);
+void   vec3_scale(real_t* res, const real_t* v, real_t factor);
+void   vec3_norm(real_t* res, const real_t* v);
+void   vec3_cross(real_t* res, const real_t* left, const real_t* right);
 
-void mat3_mul_vec3(f64* res, const f64* LHS, const f64* v);
-void vec3_outer_product(f64* Res, const f64* left, const f64* right);
-void vec3_to_skew_symmetric_mat3(f64* Res, const f64* v);
+void mat3_mul_vec3(real_t* res, const real_t* LHS, const real_t* v);
+void vec3_outer_product(real_t* Res, const real_t* left, const real_t* right);
+void vec3_to_skew_symmetric_mat3(real_t* Res, const real_t* v);
 
-void mat3_scale_diagonal(f64* Res, const f64* M, f64 factor);
-void mat3_add(f64* Res, const f64* A, const f64* B);
-void mat3_mul_scalar(f64* Res, const f64* M, f64 factor);
-void mat3_mul(f64* Res, const f64* LHS, const f64* RHS);
-void mat3_rotate_X(f64* Res, const f64* M, f64 angle);
-void mat3_rotate_Y(f64* Res, const f64* M, f64 angle);
-void mat3_rotate_Z(f64* Res, const f64* M, f64 angle);
-void mat3_rotate_axis(f64* Res, const f64* M, const f64* axis, f64 angle);
+void mat3_scale_diagonal(real_t* Res, const real_t* M, real_t factor);
+void mat3_add(real_t* Res, const real_t* A, const real_t* B);
+void mat3_mul_scalar(real_t* Res, const real_t* M, real_t factor);
+void mat3_mul(real_t* Res, const real_t* LHS, const real_t* RHS);
+void mat3_rotate_X(real_t* Res, const real_t* M, real_t angle);
+void mat3_rotate_Y(real_t* Res, const real_t* M, real_t angle);
+void mat3_rotate_Z(real_t* Res, const real_t* M, real_t angle);
+void mat3_rotate_axis(real_t*       Res,
+                      const real_t* M,
+                      const real_t* axis,
+                      real_t        angle);
 
-void mat4_mul_vec4(f64* res, const f64* LHS, const f64* v);
-void mat3_to_mat4(f64* Res, const f64* M);
-void mat4_to_mat3(f64* Res, const f64* M);
+void mat4_mul_vec4(real_t* res, const real_t* LHS, const real_t* v);
+void mat3_to_mat4(real_t* Res, const real_t* M);
+void mat4_to_mat3(real_t* Res, const real_t* M);
 
-void mat4_mul(f64* Res, const f64* LHS, const f64* RHS);
-void mat4_translate(f64* Res, const f64* M, const f64* v);
+void mat4_mul(real_t* Res, const real_t* LHS, const real_t* RHS);
+void mat4_translate(real_t* Res, const real_t* M, const real_t* v);
 
-void matN_assign_identity(f64* M, u32 N);
-void matN_transpose(f64* Res, const f64* M, u32 N);
+void matN_assign_identity(real_t* M, u32 N);
+void matN_transpose(real_t* Res, const real_t* M, u32 N);
 
-void zeroN(f64* res, u32 N);
-void assignN(f64* res, const f64* v, u32 N);
-void fillN(f64* res, f64 val, u32 N);
+void zeroN(real_t* res, u32 N);
+void assignN(real_t* res, const real_t* v, u32 N);
+void fillN(real_t* res, real_t val, u32 N);
 
 // debug
-void vecN_print(const f64* v, u32 N);
-void matN_print(const f64* M, u32 rowN, u32 colN);
-void vecN_print_named(const f64* v, u32 N, const char* name);
-void matN_print_named(const f64* M, u32 rowN, u32 colN, const char* name);
+void vecN_print(const real_t* v, u32 N);
+void matN_print(const real_t* M, u32 rowN, u32 colN);
+void vecN_print_named(const real_t* v, u32 N, const char* name);
+void matN_print_named(const real_t* M, u32 rowN, u32 colN, const char* name);
 
 #endif
