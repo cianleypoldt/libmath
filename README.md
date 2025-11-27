@@ -2,7 +2,7 @@
 
 A small C math library intended for use in simulation/graphics code.
 
-- Column-major layout by default. Define `ROW_MAJOR` before including the header to use row-major
+- Column-major memory layout by default. Define `ROW_MAJOR` before including the header to use row-major
 - No dynamic allocations anywhere in the library
 - All operations work on raw `f64*` buffers. No custom structs or composite types are provided or enforced
 - Most functions follow the pattern: `fn(target, sourceA, sourceB, ...)`.  
