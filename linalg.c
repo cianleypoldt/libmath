@@ -5,14 +5,14 @@
 #include <stdio.h>
 #include <string.h>
 
-void zeroN(real_t* res, u32 N) {
-        memset(res, 0, N * sizeof(real_t));
-}
-
 void fillN(real_t* res, real_t val, u32 N) {
         for (int i = 0; i < N; i++) {
                 res[i] = val;
         }
+}
+
+void zeroN(real_t* res, u32 N) {
+        fillN(res, 0, N);
 }
 
 void assignN(real_t* res, const real_t* v, u32 N) {

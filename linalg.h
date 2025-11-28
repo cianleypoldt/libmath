@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#ifdef LIBMATH_USE_SINGLE_PRECISION
+#ifdef LIBMATH_SINGLE_PRECISION
 typedef float real_t;
 #else
 typedef double real_t;
@@ -16,14 +16,12 @@ typedef int64_t  i64;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-#ifndef M_PI
-#        define M_PI 3.14159265358979323846
-#endif
+#define PI 3.14159265358979323846
 
-#ifndef COL_MAJOR
-#        define MATNIDX(row, col, rowN, colN) ((col) * rowN + (row))
+#ifdef COL_MAJOR
+#        define MATNIDX(row, col, rowN, colN) ((col) * (rowN) + (row))
 #else
-#        define MATNIDX(row, col, rowN, colN) ((row) * colN + (col))
+#        define MATNIDX(row, col, rowN, colN) ((row) * (colN) + (col))
 #endif
 #define MAT4IDX(row, col) MATNIDX((row), (col), 4, 4)
 #define MAT3IDX(row, col) MATNIDX((row), (col), 3, 3)
