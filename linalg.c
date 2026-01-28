@@ -77,6 +77,48 @@ void vec_outer_product(real_t* Res, const real_t* a, const real_t* b, u32 len_a,
         }
 }
 
+real_t mat_trace(real_t* M, u32 n) {
+        real_t trace = 0;
+        for (u32 i = 0; i < n; i++) {
+                trace += M[MAT_IDX(i, i, n, n)];
+        }
+        return trace;
+}
+
+real_t mat_determinant(real_t* M, u32 n) {  // upgrade to LU decomposition in future
+        if (n == 1) {
+                return M[0];
+        } else if (n == 2) {
+                return M[MAT_IDX(0, 0, n, n)] * M[MAT_IDX(1, 1, n, n)] -
+                       M[MAT_IDX(0, 1, n, n)] * M[MAT_IDX(1, 0, n, n)];
+        }
+
+        real_t det = 0;
+
+        for (u32 col = 0; col < n; col++) {
+                // build minor matrix
+                real_t* minor = (real_t*) malloc((n - 1) * (n - 1) * sizeof(real_t));
+                for (u32 i = 1; i < n; i++) {
+                        u32 minor_col = 0;
+                        for (u32 j = 0; j < n; j++) {
+                                if (j == col) {
+                                        continue;
+                                }
+                                minor[MAT_IDX(i - 1, minor_col, n - 1, n - 1)] = M[MAT_IDX(i, j, n, n)];
+                                minor_col++;
+                        }
+                }
+
+                // Recursive expansion
+                real_t sign = (col % 2 == 0) ? 1.0 : -1.0;
+                det += sign * M[MAT_IDX(0, col, n, n)] * mat_determinant(minor, n - 1);
+
+                free(minor);
+        }
+
+        return det;
+}
+
 void mat_transpose(real_t* Res, const real_t* A, u32 rowsA, u32 colsA) {
         real_t* tmp = Res == A ? malloc((size_t) rowsA * (size_t) colsA * sizeof(real_t)) : Res;
 
@@ -125,17 +167,26 @@ void mat_mul(real_t* Res, const real_t* A, const real_t* B, u32 rowsA, u32 colsA
 }
 
 void mat_vec_mul(real_t* Res, const real_t* A, const real_t* v, u32 rowsA, u32 colsA) {
-        // TODO: this is incorrect or unsafe.
-        mat_mul(Res, A, v, rowsA, colsA, 1);
+        zeroN(Res, rowsA);
+        for (u32 row = 0; row < rowsA; row++) {
+                for (u32 col = 0; col < colsA; col++) {
+                        Res[row] += A[MAT_IDX(row, col, rowsA, colsA)] * v[col];
+                }
+        }
 }
 
 void mat_scalar_mul(real_t* Res, const real_t* M, real_t factor, u32 rows, u32 cols) {
         vec_scale(Res, M, factor, rows * cols);
 }
 
+void mat_plane_proj(real_t* Res, const real_t* u, const real_t* v, u32 n) {
+        real_t* M = (real_t*) malloc((size_t) n * (size_t) n * sizeof(real_t));
+        vec_length(u, n);
+}
+
 void mat_plane_rotation(real_t* Res, const real_t* u, const real_t* v, real_t angle, u32 n) {
         size_t  mat_size = (size_t) n * (size_t) n;
-        real_t* buffer   = malloc(2 * mat_size * sizeof(real_t));
+        real_t* buffer   = (real_t*) malloc(2 * mat_size * sizeof(real_t));
         real_t* M1       = buffer + 0 * mat_size;
         real_t* M2       = buffer + 1 * mat_size;
         real_t* M3       = Res;
@@ -230,7 +281,7 @@ void vec3_to_cross_mat3(real_t* Res, const real_t* v) {
 // debug
 void vec_print(const real_t* v, u32 n) {
         printf("{ ");
-        for (int i = 0; i < n - 1; i++) {
+        for (u32 i = 0; i < n - 1; i++) {
                 printf("%f, ", v[i]);
         }
         printf("%f }\n", v[n - 1]);
@@ -242,9 +293,9 @@ void vec_print_named(const real_t* v, u32 n, const char* name) {
 }
 
 void mat_print(const real_t* M, u32 rows, u32 cols) {
-        for (int row = 0; row < rows; row++) {
+        for (u32 row = 0; row < rows; row++) {
                 printf("{ ");
-                for (int col = 0; col < cols - 1; col++) {
+                for (u32 col = 0; col < cols - 1; col++) {
                         printf("%f, ", M[MAT_IDX(row, col, rows, cols)]);
                 }
                 printf("%f }\n", M[MAT_IDX(row, cols - 1, rows, cols)]);

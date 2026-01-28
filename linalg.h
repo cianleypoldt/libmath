@@ -36,6 +36,9 @@ void   vec_normalize(real_t* Res, const real_t* v, u32 n);
 
 void vec_outer_product(real_t* Res, const real_t* a, const real_t* b, u32 n_b, u32 n_a);
 
+real_t mat_trace(real_t* M, u32 n);
+real_t mat_determinant(real_t* M, u32 n);
+
 void mat_identity(real_t* Res, u32 n);
 void mat_transpose(real_t* Res, const real_t* M, u32 rowsA, u32 colsA);
 void mat_resize(real_t* Res, const real_t* M, u32 rowsM, u32 colsM, u32 rowsRes, u32 colsRes);
@@ -44,10 +47,11 @@ void mat_sub(real_t* Res, const real_t* A, const real_t* B, u32 rows, u32 cols);
 void mat_mul(real_t* Res, const real_t* A, const real_t* B, u32 rowsA, u32 colsA, u32 colsB);
 void mat_vec_mul(real_t* Res, const real_t* M, const real_t* v, u32 n, u32 cols);
 void mat_scalar_mul(real_t* Res, const real_t* M, real_t factor, u32 rows, u32 cols);
+void mat_normal_plane_proj(real_t* Res, const real_t* normal, u32 n);
+void mat_span_plane_proj(real_t* Res, const real_t* u, const real_t* v, u32 n);
 void mat_plane_rotation(real_t* Res, const real_t* u, const real_t* v, real_t angle, u32 n);  // |u| = |v| = 1  ;   u * v = 0
 
 void cross_vec3(real_t* Res, const real_t* a, const real_t* b);
-void mat3_line_proj(real_t* Res, const real_t* a);
 void mat3_plane_proj(real_t* Res, const real_t* a);
 void mat3_X_rotation(real_t* Res, real_t angle);
 void mat3_Y_rotation(real_t* Res, real_t angle);
